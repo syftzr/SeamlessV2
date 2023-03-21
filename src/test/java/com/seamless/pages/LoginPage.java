@@ -24,6 +24,23 @@ public class LoginPage {
     @FindBy(xpath = "/html/body/div[1]/div/main/div/div/form/fieldset/p[3]")
     public WebElement wrongMsg;
 
+    @FindBy(xpath = "//input[@id='user' and @required='required']")
+    public WebElement fillOutMessage;
+
+    @FindBy(css = "input[type='password']")
+    public WebElement passwordAsDots;
+
+    @FindBy(xpath = "//a[@class='toggle-password']")
+    public WebElement eyeIcon;
+
+    @FindBy(id="lost-password")
+    public WebElement forgotPassword;
+
+    @FindBy(id="reset-password-submit")
+    public WebElement resetPassword;
+
+
+
 
 
 

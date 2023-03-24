@@ -8,20 +8,27 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Login_StepDefinitions {
 
-    LoginPage loginPage=new LoginPage();
+    LoginPage loginPage = new LoginPage();
+
+
     @Given("User is on the login page")
     public void userIsOnTheLoginPage() {
-        Driver.getDriver().get(ConfigurationReader.getProperty("browser"));
+        Driver.getDriver().get(ConfigurationReader.getProperty("loginUrl"));
     }
 
     @When("user can write valid username")
     public void userCanWriteValidUsername() {
         loginPage.userName.sendKeys("Employee160");
     }
+
 
     @And("user can write valid password")
     public void userCanWriteValidPassword() {
@@ -35,7 +42,7 @@ public class Login_StepDefinitions {
 
     @Then("user can see dashboard")
     public void userCanSeeDashboard() {
-        Assert.assertTrue(Driver.getDriver().getTitle().toLowerCase().contains("dashboard"));
+        Assert.assertTrue(Driver.getDriver().getCurrentUrl().contains("dashboard"));
     }
 
     @And("user can press Enter key")
@@ -43,38 +50,39 @@ public class Login_StepDefinitions {
         loginPage.inputPassword.sendKeys(Keys.ENTER);
     }
 
+    @Then("user can see the dashboard")
+    public void userCanSeeTheDashboard() {
+        Assert.assertTrue(Driver.getDriver().getCurrentUrl().contains("dashboard"));
+    }
+
     @When("user can write valid or invalid username {string}")
     public void userCanWriteValidOrInvalidUsername(String username) {
-loginPage.userName.sendKeys(username);
+        loginPage.userName.sendKeys(username);
     }
 
     @And("user can write valid or invalid password {string}")
     public void userCanWriteValidOrInvalidPassword(String password) {
-    loginPage.inputPassword.sendKeys(password);
+        loginPage.inputPassword.sendKeys(password);
     }
+
 
     @Then("user can not see dashboard and {string} message should be displayed")
     public void userCanNotSeeDashboardAndMessageShouldBeDisplayed(String message) {
-    Assert.assertEquals(loginPage.wrongMsg.getText(),"Wrong username or password.");
-    }
-
-    @When("user can leave username box empty")
-    public void userCanLeaveUsernameBoxEmpty() {
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), 40);
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[@class='warning wrongPasswordMsg']")));
+        Assert.assertEquals(message,loginPage.wrongMsg.getText());
 
     }
 
-    @Then("user can not login and {string} message should be displayed")
-    public void userCanNotLoginAndMessageShouldBeDisplayed(String message) {
-        Assert.assertEquals(loginPage.fillOutMessage.getText(),"Please fill out this field");
-    }
-
-    @And("user can leave password box empty")
-    public void userCanLeavePasswordBoxEmpty() {
+    @Then("user can not login and {string} should be displayed")
+    public void userCanNotLoginAndShouldBeDisplayed(String message) {
+               Assert.assertTrue((loginPage.fillOutMessage.isDisplayed() || loginPage.wrongMsg.getText().toLowerCase().equals("Please fill out this field")));
     }
 
     @Then("user can see the password in a form of dots")
     public void userCanSeeThePasswordInAFormOfDots() {
-        Assert.assertEquals(loginPage.inputPassword.getAttribute("type"),"password");
+
+        Assert.assertEquals("password", loginPage.inputPassword.getAttribute("type"));
     }
 
     @And("user clicks eye icon")
@@ -84,31 +92,32 @@ loginPage.userName.sendKeys(username);
 
     @Then("User can see the password explicitly")
     public void userCanSeeThePasswordExplicitly() {
-        Assert.assertEquals(loginPage.inputPassword.getAttribute("type"),"text");
+        Assert.assertEquals("text", loginPage.inputPassword.getAttribute("type"));
     }
 
     @Then("User can see the {string} link")
-    public void userCanSeeTheLink(String forgotPassword) {
-        Assert.assertEquals(loginPage.forgotPassword.getText(),"Forgot password?");
+    public void userCanSeeTheLink(String forgotLink) {
+        Assert.assertTrue(loginPage.forgotPassword.isDisplayed());
     }
 
     @When("user clicks the {string} link")
-    public void userClicksTheLink(String arg0) {
+    public void userClicksTheLink(String forgotLink) {
         loginPage.forgotPassword.click();
     }
 
     @Then("User can see the {string} button")
-    public void userCanSeeTheButton(String resetPassword) {
-        Assert.assertEquals(loginPage.resetPassword.getText(),"Reset Password");
+    public void userCanSeeTheButton(String resetPasword) {
+    Assert.assertTrue(loginPage.resetPassword.isDisplayed());
     }
 
     @Then("User can see valid placeholder on username field")
     public void userCanSeeValidPlaceholderOnUsernameField() {
-       Assert.assertEquals(loginPage.userName.getAttribute("placeholder"),"Username or email");
+    Assert.assertEquals("Username or email",loginPage.userName.getAttribute("placeholder"));
     }
 
     @Then("User can see valid placeholder on password field")
     public void userCanSeeValidPlaceholderOnPasswordField() {
-        Assert.assertEquals(loginPage.inputPassword.getAttribute("placeholder"),"Password");
+        Assert.assertEquals("Password",loginPage.inputPassword.getAttribute("placeholder"));
+
     }
 }

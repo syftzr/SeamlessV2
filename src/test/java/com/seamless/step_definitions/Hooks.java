@@ -17,7 +17,7 @@ public class Hooks {
             BrowserUtils.sleep(2);
         }
     }
-    @After
+
     public void closeBrowser() {
        Driver.quitDriver();
     }

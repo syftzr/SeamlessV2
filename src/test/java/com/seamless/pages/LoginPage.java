@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class LoginPage {
+public class LoginPage extends BasePage{
     public LoginPage() {
 
         PageFactory.initElements(Driver.getDriver(), this);
@@ -21,7 +21,7 @@ public class LoginPage {
     @FindBy(id = "submit-form")
     public WebElement loginButton;
 
-    @FindBy(xpath = "/html/body/div[1]/div/main/div/div/form/fieldset/p[3]")
+    @FindBy(xpath = "//p[@class='warning wrongPasswordMsg']")
     public WebElement wrongMsg;
 
     @FindBy(xpath = "//input[@id='user' and @required='required']")
@@ -40,15 +40,6 @@ public class LoginPage {
     public WebElement resetPassword;
 
 
-
-
-
-
-    public void login(String username, String password) {
-        userName.sendKeys(username);
-        inputPassword.sendKeys(password);
-        loginButton.click();
-    }
 
 
 
